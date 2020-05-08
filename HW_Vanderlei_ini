@@ -1,55 +1,68 @@
 #!/bin/bash
-# I am writing this script to make this homework run easier. Hopefully it helps and isn't
-# just a pain. Please report bugs...
 
-# Simulation Output name
-savnam=HW_Vanderlei
+# ---------------------------------------------------------------------- #
+# DESCRIPTION -> I am writing this script to make this homework run easy #
+#                Hopefully it helps and isn/t just a pain. Please report #
+#                if you experience any bugs...                           #
+# ---------------------------------------------------------------------- #
 
-# Who are you? List your username for Uranus
-usrnam=mroots
-
+# ---------------------------------------------------------------------- #
 # Do not change these, unless you are debugging
-f_nam=test_build
-f_loc=/mnt/Raid4TB/ART/home/$usrnam
-data_loc=/mnt/Raid4TB/ART/shared/'UNL-VRTM'/data
+# ---------------------------------------------------------------------- #
 
-# Parameters for changing
-aod_modes=2
-aod_fine_mode=0.5
-aod_coarse_mode=0.25
+aod_modes=2 	# Aerosol Optical Depth (AOD) modes
 
-r_rf_indx=1.55
-i_rf_indx=-0.02
+f_nam=namelist.ini	# Export as file -> namelist.ini
 
-spec_range1=300
-spec_range2=2500
-spec_res=1
+data_loc=/mnt/Raid4TB/ART/shared/'UNL-VRTM'/data	# Data Path
 
-sza=30
-saa=90
+# ---------------------------------------------------------------------- #
+# USER INPUTS                                                            #
+# ---------------------------------------------------------------------- #
 
-surf_a=0
-# Type of Atmosphere
+usrnam=mroots	# Enter your USERNAME
 
-	# Presets #
-	# 1 ->	Tropical
-	# 2 ->	Mid-Latitute Summer
-	# 3 ->	mid-Latitude Winter
-	# 4 ->	High-Latitude Summer
-	# 5 ->	High-Latitude Winter
-	# 6 ->	US Standard (1976)
-	# -1 ->	User Specified in atmos.dat file
-	# -2 ->	User Specified in atmos.nc file
+savnam=HW_Vanderlei	# Create a OUTPUT FILE name
 
-# Numer of Layers?
-lay_num=49
+sav_dir=/mnt/Raid4TB/ART/home/mroots/exports	# OUTPUT FILE directory
 
-	# Presets #
-	# -1 ->	33 Layers
-	# -2 ->	26 Layers
+f_loc=/mnt/Raid4TB/ART/home/$usrnam/UNL-VRTM_Roots/unl-vrtm-2.1/ # Path
 
-# The following will be input for namelist.ini -> aka. the input file of UNL-VRTM
-cd $f_loc
+aod_fine_mode=0.5	# AOD Fine mode
+aod_coarse_mode=0.25	# AOD Coarse  mode
+
+r_rf_indx=1.55 		# Real part of Refractive Index
+i_rf_indx=-0.02 	# Imaginart part of Refractive Index
+
+spec_range1=300	 	# Spectral Range Start	-> 300 nm
+spec_range2=2500 	# Spectral Range Stop	-> 2500 nm
+spec_res=1		# Spectral Resolution	-> 1 nm
+
+sza=30			# Solar Zenith Angle (SZA)
+saa=90			# Solar Azimuth Angle (SAA)
+
+surf_a=0		# Surface Albedo
+
+atmotype=2 		# Type of Atmosphere
+			   	# Presets #
+				# 1 ->	Tropical
+				# 2 ->	Mid-Latitute Summer
+				# 3 ->	mid-Latitude Winter
+				# 4 ->	High-Latitude Summer
+				# 5 ->	High-Latitude Winter
+				# 6 ->	US Standard (1976)
+				# -1 ->	User Specified in atmos.dat file
+				# -2 ->	User Specified in atmos.nc file
+
+lay_num=49		# Numer of Layers?
+				# Presets #
+				# -1 ->	33 Layers
+				# -2 ->	26 Layers
+
+# ---------------------------------------------------------------------------- #
+# The following will be input for namelist.ini -> the input file of UNL-VRTM
+# ---------------------------------------------------------------------------- #
+
 echo "UNL-VRTM v2.1 namelist file 12/09/2019 xxu
 ************************+******************************************************
 %%% CONTROL MENU %%%    :
@@ -57,13 +70,13 @@ Frequency as input?     : F
 Spectra set (nm or 1/cm): $spec_range1 $spec_range2
   - interval(nm or 1/cm): $spec_res
   - FWHM    (nm or 1/cm): 2
-Atmos. type[1-6,-1 or-2]: 2
-  - number of layers    : 49
+Atmos. type[1-6,-1 or-2]: $atmotype
+  - number of layers    : $lay_num
   - surf altitude (m)   : -1
   - surf pressure (hPa) : -1
 Run    directory        : ./
 Data   directory        : $data_loc
-Output directory        : ./
+Output directory        : $sav_dir
 ------------------------+------------------------------------------------------
 %%% GEOMETRY MENU %%%   :
 Solar zenith angle      : $sza
@@ -205,13 +218,15 @@ DIAG08: Jacobians       : F
 Write VLIDORT inputs?   : T
 Turn on screen print?   : T
   - print aerosol calc? : T
-  - print Mie calc?     : F
-  - print Rayleigh calc?: F
+  - print Mie calc?     : T
+  - print Rayleigh calc?: T
   - print gas calc?     : T
   - print surface calc? : T
   - print RTM calc?     : T
 ------------------------+------------------------------------------------------
 END OF FILE             :
-***********************+******************************************************" >$f_nam
+************************+******************************************************" | tee $f_loc/run/$f_nam $sav_dir/$f_nam
 
 # Now that the input file (namelist.ini) is set we can run the code
+cd $f_loc && ./build && cd $f_loc/run && ./run.sh
+
