@@ -26,10 +26,10 @@ target=/mnt/Raid4TB/ART/home/$usrnam/$dir_get
 # ------------------------------------------------------------------------------- #
 
 # Telling you what is happening
-echo 'Getting ALL files, and folders in $target'
+echo Getting ALL files, and folders in $target
 
 # This line will recursively (all files and directories) in a specified directory
-scp -r $usrnam@uranus.laco.phys.umbc.edu:$target $savnam
+scp -r -C -p $usrnam@uranus.laco.phys.umbc.edu:$target/* $savnam
 
 # - END - #
 
