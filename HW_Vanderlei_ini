@@ -14,7 +14,7 @@ aod_modes=2 	# Aerosol Optical Depth (AOD) modes
 
 f_nam=namelist.ini	# Export as file -> namelist.ini
 
-data_loc=/mnt/Raid4TB/ART/shared/'UNL-VRTM'/data	# Data Path
+data_loc=/mnt/Raid4TB/ART/home/mroots/UNL-VRTM_Roots/data	# Data Path
 
 # ---------------------------------------------------------------------- #
 # USER INPUTS                                                            #
@@ -22,7 +22,7 @@ data_loc=/mnt/Raid4TB/ART/shared/'UNL-VRTM'/data	# Data Path
 
 usrnam=mroots	# Enter your USERNAME
 
-savnam=HW_Vanderlei	# Create a OUTPUT FILE name
+savnam=HW_Vanderlei_LWav	# Create a OUTPUT FILE name
 
 sav_dir=/mnt/Raid4TB/ART/home/mroots/exports	# OUTPUT FILE directory
 
@@ -34,11 +34,13 @@ aod_coarse_mode=0.25	# AOD Coarse  mode
 r_rf_indx=1.55 		# Real part of Refractive Index
 i_rf_indx=-0.02 	# Imaginart part of Refractive Index
 
-spec_range1=300	 	# Spectral Range Start	-> 300 nm
-spec_range2=2500 	# Spectral Range Stop	-> 2500 nm
-spec_res=1		# Spectral Resolution	-> 1 nm
+# Specify in nm or 1/cm #
+wav_num=F		# F -> wavelength (nm) | T -> wavenumber (1/cm)
+spec_range1=250 	# Spectral Range Start
+spec_range2=300 	# Spectral Range Stop
+spec_res=1		# Spectral Resolution
 
-sza=30			# Solar Zenith Angle (SZA)
+sza=53			# Solar Zenith Angle (SZA)
 saa=90			# Solar Azimuth Angle (SAA)
 
 surf_a=0		# Surface Albedo
@@ -54,7 +56,7 @@ atmotype=2 		# Type of Atmosphere
 				# -1 ->	User Specified in atmos.dat file
 				# -2 ->	User Specified in atmos.nc file
 
-lay_num=49		# Numer of Layers?
+lay_num=3		# Numer of Layers?
 				# Presets #
 				# -1 ->	33 Layers
 				# -2 ->	26 Layers
@@ -66,7 +68,7 @@ lay_num=49		# Numer of Layers?
 echo "UNL-VRTM v2.1 namelist file 12/09/2019 xxu
 ************************+******************************************************
 %%% CONTROL MENU %%%    :
-Frequency as input?     : F
+Frequency as input?     : $wav_num
 Spectra set (nm or 1/cm): $spec_range1 $spec_range2
   - interval(nm or 1/cm): $spec_res
   - FWHM    (nm or 1/cm): 2
@@ -74,7 +76,7 @@ Atmos. type[1-6,-1 or-2]: $atmotype
   - number of layers    : $lay_num
   - surf altitude (m)   : -1
   - surf pressure (hPa) : -1
-Run    directory        : ./
+Run    directory        : $sav_dir
 Data   directory        : $data_loc
 Output directory        : $sav_dir
 ------------------------+------------------------------------------------------
@@ -122,9 +124,9 @@ Turn on surface Jacob.? : T
 Do FD verication?       : F
 ------------------------+------------------------------------------------------
 %%% SURFACE MENU %%%    :
-Do Lambertian surface?  : F
-  - surface reflecetance: 0.05
-Do BRDF/BPDF surface?   : T
+Do Lambertian surface?  : T
+  - surface reflecetance: $surf_a
+Do BRDF/BPDF surface?   : F
   - # of kernels        : 2
   - kernel entries      : Name      Index  Factor  #PARS  PAR(1)  PAR(2)  PAR(3)
            ==> kernel#1 : Lambertian  1    0.02    0      0.0     0.0     0.0
